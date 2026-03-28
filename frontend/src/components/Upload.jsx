@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"; 
+import toast from "react-hot-toast";
 import axios from "axios";
 import gsap from "gsap";
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -44,10 +45,10 @@ const Upload = () => {
   }, [pageCount, printType, copies]);
 
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a PDF file");
-      return;
-    }
+     if (!file) {
+    toast.error("Please select a PDF file");
+    return;
+  }
 
     const formData = new FormData();
     formData.append("file", file);
@@ -60,9 +61,10 @@ const Upload = () => {
 
       setPageCount(res.data.pageCount);
       setFileName(res.data.fileName);
+      toast.success(`File uploaded: ${res.data.fileName}`);
     } catch (err) {
       console.error(err);
-      alert("Upload failed");
+      toast.error("Upload failed");
     }
   };
 
@@ -78,7 +80,7 @@ const Upload = () => {
 
       await axios.post("http://127.0.0.1:5000/api/orders", orderData);
 
-      alert("Order placed successfully ✅");
+      toast.success("Order placed successfully ✅");
 
       // Reset after order placed
       setFile(null);
@@ -88,7 +90,7 @@ const Upload = () => {
       setTotalPrice(0);
     } catch (err) {
       console.error(err);
-      alert("Failed to place order ❌");
+       toast.error("Failed to place order ❌");
     }
   };
 
